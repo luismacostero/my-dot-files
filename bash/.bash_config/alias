@@ -1,0 +1,68 @@
+##
+## Generales
+##
+alias cd..='cd ..'
+alias celar='clear'
+alias gopen='gnome-open'
+alias ls='ls -F'
+alias l='ls -la'
+
+alias borralatex='rm *.aux *.bbl *.blg *.log *.out .aux'
+alias linea='width=`tput cols`; echo ""; echo ""; for i in `seq 1 $width`; do echo -n "_"; done; echo ""; echo ""'
+alias less='less -N'
+alias KK='export KK=`pwd`'
+
+
+##
+## Si hay colores, los mostramos de forma automática
+##
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls -F --color=auto'
+    alias l='ls -la --color=auto'
+    
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+
+##
+## Relacionado con paths y librerias
+##
+alias addpath='export PATH=`pwd`:$PATH && echo $PATH'
+alias rmpath='export PATH=`echo $PATH | cut --delimiter=: --fields=2-` && echo $PATH'
+alias addld='export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH && echo $LD_LIBRARY_PATH'
+alias rmld='export LD_LIBRARY_PATH=`echo $LD_LIBRARY_PATH | cut --delimiter=: --fields=2-` && echo $LD_LIBRARY_PATH'
+
+alias echopath='echo $PATH'
+alias echold='echo $LD_LIBRARY_PATH'
+
+
+##
+## emacs
+##
+alias ec='emacsclient -c -n'
+alias nec='emacsclient -c -n -nw'
+alias qemas='emacs -q'
+alias nemacs='emacs -nw'
+alias remacs='emacs -r'
+
+
+##
+## PDFs
+##
+alias pdf3x2='for i in *.pdf; do pdfnup —nup 2x3 —no-landscape $i -o 3x2/$i; done'
+alias pdf2x2='if [ ! -d 2x2 ]; then mkdir 2x2; fi; for i in *.pdf; do pdfnup —nup 2x2 "$i" -o 2x2/"$i"; done'
+alias concatpdf='test -f ALL.pdf || pdftk * cat output ALL.pdf'
+alias reducepdf='gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=lowQuality.pdf'
+
+
+##
+## Convertir entre formatos
+##
+alias utf8toiso='iconv -f UTF-8 -t ISO-8859-15'
+alias isotoutf8='iconv -t UTF-8 -f ISO-8859-15'
+
+
+

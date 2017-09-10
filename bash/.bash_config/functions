@@ -1,0 +1,26 @@
+function transfiere {
+    local folder="$HOME/transf"
+    [ -d $folder ] || mkdir $folder
+
+    local dest="$folder/"$(hostname)
+    [ -d $dest ] || mkdir $dest
+
+    cp -r $@ $dest
+}
+
+function check_sudo {
+    if [ "$EUID" -ne 0 ]; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+
+#  changeFreq <$1:core> <$2:freq>(MHz)	
+function changeFreq {
+    check_sudo || return 1;
+
+    cpufreq-set -c $1 -g userspace
+    cpufreq-set -c $1 -d ${2}MHz -u ${2}MHz
+}

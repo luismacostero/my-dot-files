@@ -1,0 +1,33 @@
+#!/bin/bash -ex
+
+OMPSS_PATH=/home/lcostero/local/ompss-16.06/bin
+LD_LIBRARY_PATH=$OMPSS_PATH/lib/debug:$LD_LIBRARY_PATH
+
+# ==========================================================
+# ==========================================================
+# Configure OmpSs + Extrae + Paraver + Temanejo
+export OMPSS_HOME=$OMPSS_PATH
+export EXTRAE_HOME=$OMPSS_PATH
+export PARAVER_HOME=/home/lcostero/Software/wxparaver-4.5.8-linux-x86_64
+# Extra package configuration
+export MKL_LIB_DIR=/opt/intel/mkl/lib/intel64
+export MKL_INC_DIR=/opt/intel/mkl/include
+# ==========================================================
+# ==========================================================
+
+# Setting environment variables
+export PATH=$OMPSS_HOME/bin:$PATH
+export PATH=$EXTRAE_HOME/bin/:$PATH
+export PATH=$PARAVER_HOME/bin:$PATH
+
+export LD_LIBRARY_PATH=$MKL_LIB_DIR:$LD_LIBRARY_PATH
+
+
+# ==========================================================
+export NX_ARGS="--schedule=botlev --smp-workers=4 --disable-binding --disable-ut --steal=1"
+export NX_HP_FROM=0
+export NX_HP_TO=1
+export EXTRAE_CONFIG_FILE=extrae.xml
+export NX_INSTRUMENTATION=extrae
+# ==========================================================
+export PS1=[ompss-D]$PS1

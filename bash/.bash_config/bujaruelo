@@ -1,0 +1,32 @@
+#Configuraciones propias de Bujaruelo
+
+export PATH=/home/lcostero/local/bin:$PATH
+
+
+export PAPI_HOME=/scratch/lcostero_local/papi/
+export PAPI_LIB=$PAPI_HOME/lib
+export PAPI_INC=$PAPI_HOME/include
+
+
+export OCL_HOME=/opt/intel/opencl
+export OCL_LIB=$OCL_HOME/lib64
+export OCL_INC=$OCL_HOME/include
+
+
+export CUDA_HOME=/opt/cuda
+export CUDA_LIB=$CUDA_HOME/lib64
+export CUDA_INC=$CUDA_HOME/include
+
+
+
+export MKL_HOME=/opt/intel/mkl
+source $MKL_HOME/bin/mklvars.sh intel64
+
+export MKL_LIB=/opt/intel/mkl/lib
+export MKL_INC=/opt/intel/mkl/include
+
+
+
+
+
+
