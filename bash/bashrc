@@ -1,4 +1,4 @@
-export PATH_CONFIG__=$HOME/.bash_config
+export PATH_CONFIG__=$HOME/bash_config
 
 #general
 if [ -f $PATH_CONFIG__/general ]; then
