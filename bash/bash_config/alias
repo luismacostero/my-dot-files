@@ -11,6 +11,9 @@ alias borralatex='rm *.aux *.bbl *.blg *.log *.out .aux'
 alias linea='width=`tput cols`; echo ""; echo ""; for i in `seq 1 $width`; do echo -n "_"; done; echo ""; echo ""'
 alias less='less -N'
 alias KK='export KK=`pwd`'
+alias borraextrae='rm -rfi *.{prv,row,pcf} TRACE.* set-0/'
+
+alias noctave='octave --no-gui'
 
 
 ##
