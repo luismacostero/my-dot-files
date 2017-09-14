@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#CONSEGUIR EL DIRECTORIO DONDE ESTAMOS
-CUR_DIR=
+# Ubicacion del instalador y base de los archivos
+BASE_DIR=$(dirname "$(readlink -f "$0" )")
 
-cp ${CUR_DIR}/.emacs ~/.emacs
-cp -r ${CUR_DIR}/.emacs-lisp/ ~/.emacs-lisp/
+cp ${BASE_DIR}/.emacs ~/.emacs
+cp -r ${BASE_DIR}/.emacs-lisp/ ~/.emacs-lisp/
 
 
