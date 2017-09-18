@@ -7,6 +7,9 @@ alias gopen='gnome-open'
 alias ls='ls -F'
 alias l='ls -la'
 
+alias man2='man 2'
+alias man3='man 3'
+
 alias borralatex='rm *.aux *.bbl *.blg *.log *.out .aux'
 alias linea='width=`tput cols`; echo ""; echo ""; for i in `seq 1 $width`; do echo -n "_"; done; echo ""; echo ""'
 alias less='less -N'
