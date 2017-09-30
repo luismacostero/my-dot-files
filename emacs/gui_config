@@ -1,0 +1,65 @@
+;;
+;; Temas de colores y  modificaciones necesarias
+;;
+(load-theme 'misterioso)
+
+(set-face-background 'linum "#2D3743")
+(set-face-foreground 'linum "#999999")
+(set-face-background 'mode-line "#FF4747")
+
+
+;;
+;; Personalizaciones de la ventana de emacs
+;;
+(scroll-bar-mode -1) ;; Sin barra de scroll
+(tool-bar-mode -1)   ;; Ni barra de herramientas
+(menu-bar-mode -1)   ;; Ni barra de menu
+
+;;
+;; Tamanyo del frame original
+;;
+;(add-to-list 'default-frame-alist '(height . 150))
+;(add-to-list 'default-frame-alist '(width . 250))
+
+
+
+;; La barra del título muestra el nombre del buffer actual 
+(setq frame-title-format '("emacs: %*%+ %b"))
+
+
+;;
+;; Funtes y tamaños
+;;
+(set-default-font "DejaVu Sans Mono Book 9")
+
+;;
+;; fci (fill column indicator) => linea vertical dcha
+;;
+(require 'fill-column-indicator)
+(setq fci-rule-width 1) ;; Ancho de la línea
+(setq fci-rule-column 80) ;; Donde dibujar la línea
+(setq fci-rule-color "#999999")
+(define-globalized-minor-mode global-fci-mode fci-mode
+    (lambda ()
+      (if (and
+           (not (string-match "^\*.*\*$" (buffer-name)))
+           (not (eq major-mode 'dired-mode)))
+          (fci-mode 1))))
+(global-fci-mode 1)
+
+
+
+;;
+;; About scroll
+;;
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil)            ;; don't accelerate scrolling
+;(setq mouse-wheel-follow-mouse 't)                 ;; scroll window under mouse
+;(setq scroll-step 1)                               ;; keyboard scroll one line at a time
+
+;;
+;; About copy-paste (clipboard)
+;;
+(setq x-select-enable-clipboard t)
+(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+

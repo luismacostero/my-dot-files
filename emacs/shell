@@ -1,0 +1,44 @@
+;;==============================================================================
+;; Configuraciones propias de la shell de emacs
+;;==============================================================================
+
+
+;; Con esto las contrasenyas del git no deberian verse.
+;; PROBAR.
+(setenv "PAGER" "/bin/cat")
+
+;; truncate buffers continuously
+(add-hook 'comint-output-filter-functions 'comint-truncate-buffer)
+
+; interpret and use ansi color codes in shell buffers
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(defun set-scroll-conservatively ()
+  "Add to shell-mode-hook to prevent jump-scrolling on newlines in shell buffers."
+  (set (make-local-variable 'scroll-conservatively) 10))
+(add-hook 'shell-mode-hook 'set-scroll-conservatively)
+
+
+;; Evitamos que la shell divida la pantalla y se abra en otro buffer (comportamiento introducido en emacs25)
+(push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*shell5\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*shell6\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*shell7\\*" display-buffer--same-window-action) display-buffer-alist)
+(push (cons "\\*shell8\\*" display-buffer--same-window-action) display-buffer-alist)
+
+;; Lanzamos unas pocas shell al inicio
+;; Las lanzamos del revés para que se quede abierta la 5 al iniciar
+(shell "*shell8*")
+(shell "*shell7*")
+(shell "*shell6*")
+(shell "*shell5*")
+
+;; Fn para cambiar a la shell en caso de existir
+(global-set-key [f8]
+		(lambda () (interactive) (switch-to-buffer "*shell8*")))
+(global-set-key [f7]
+		(lambda () (interactive) (switch-to-buffer "*shell7*")))
+(global-set-key [f6]
+		(lambda () (interactive) (switch-to-buffer "*shell6*")))
+(global-set-key [f5]
+		(lambda () (interactive) (switch-to-buffer "*shell5*")))

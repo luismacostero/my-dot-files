@@ -1,0 +1,108 @@
+;;==============================================================================
+;; Configuracion general que siempre se va a cargar, independientemente de la
+;;  situacion en la que se inicie emacs
+;;==============================================================================
+
+
+;;
+;; Sistema de paqueteria melpa
+;;
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize) 
+
+
+;;
+;; Comportamiento de emacs
+;;
+
+;; La tecla 'Supr' borra la parte seleccionada
+(pending-delete-mode 1)
+
+;; Evita añadir líneas en blanco al final del fichero...
+(setq next-line-add-newlines nil)
+
+;; ... aunque todos los archivos terminan con línea en blanco
+(setq require-final-newline t)
+
+;; No muestres los mensajes de inicio, ya los conozco
+(setq inhibit-startup-message t)
+
+;; Usa y/n en lugar de yes/no 
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Mis temas de colores están en
+(setq emacs-config-my-colorthemes-directory (concat emacs-config-dir "color-themes/"))
+(add-to-list 'custom-theme-load-path emacs-config-my-colorthemes-directory)
+
+;; Mis ficheros de los distintos modos están en
+(setq my-lisp-modes-directory (concat emacs-config-dir "/emacs-lisp/"))
+;; Carga el directorio de los ficheros elisp
+(add-to-list 'load-path my-lisp-modes-directory)
+
+;; No crees ficheros temporales xxx~
+(setq make-backup-files nil)
+
+;; Remarca la zona seleccionada
+(transient-mark-mode +1)
+
+;; ancho de columna automatico a 80 char
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook
+	  '(lambda() (set-fill-column 80)))
+
+;; Muestra el número de línea y de columna
+(global-linum-mode t)
+(column-number-mode 't)
+
+;; Apaga el beep molesto
+(setq ring-bell-function 'ignore)
+
+;; muestra los parentesis emparejados
+(show-paren-mode t)
+
+;;
+;; Display-time
+;;
+
+;; Mostramos el tiempo en el mode-line
+(setq display-time-default-load-average nil) ;; no mostramos la carga del procesador, solamente la hora
+(setq display-time-24hr-format 1) ;; el reloj es en formato 24h
+(display-time)
+;; mostramos el reloj a la derecha de la barra
+(setq global-mode-string (remove 'display-time-string global-mode-string))
+(setq mode-line-end-spacesn
+      (list (propertize " " 'display '(space :align-to (- right 12)))
+	    'display-time-string))
+
+
+;;
+;; Mostramos el hostname en la barra inferior por si estamos en un directorio remoto
+;; Source: ??
+;;
+(defconst my-mode-line-buffer-identification
+  (list
+   '(:eval
+     (let ((host-name
+            (if (file-remote-p default-directory)
+                (tramp-file-name-host
+                 (tramp-dissect-file-name default-directory))
+              (system-name))))
+       (if (string-match "^[^0-9][^.]*\\(\\..*\\)" host-name)
+           (substring host-name 0 (match-beginning 1))
+         host-name)))
+   ": %12b"))
+
+(setq-default
+ mode-line-buffer-identification
+ my-mode-line-buffer-identification)
+
+(add-hook
+ 'dired-mode-hook
+ (lambda ()
+   (setq
+    mode-line-buffer-identification
+    my-mode-line-buffer-identification)))
