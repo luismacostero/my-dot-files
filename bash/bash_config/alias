@@ -7,17 +7,22 @@ alias gopen='gnome-open'
 alias ls='ls -F'
 alias l='ls -la'
 
-alias man2='man 2'
-alias man3='man 3'
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 
-alias borralatex='rm *.aux *.bbl *.blg *.log *.out .aux'
+
 alias linea='width=`tput cols`; echo ""; echo ""; for i in `seq 1 $width`; do echo -n "_"; done; echo ""; echo ""'
 alias less='less -N'
 alias KK='export KK=`pwd`'
 
-alias borraextrae='rm -rfi *.{prv,row,pcf} TRACE.* set-0/'
+alias man2='man 2'
+alias man3='man 3'
+
 alias killbg='for p in `jobs -p`; do kill -9 $p; done'
 
+#otros generales
 alias noctave='octave --no-gui'
 
 
@@ -26,9 +31,9 @@ alias noctave='octave --no-gui'
 ##
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls -F --color=auto'
+    alias ls='ls --color=auto'
     alias l='ls -la --color=auto'
-    
+
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
@@ -47,6 +52,10 @@ alias echopath='echo $PATH'
 alias echold='echo $LD_LIBRARY_PATH'
 
 
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 ##
 ## emacs
 ##
@@ -60,10 +69,34 @@ alias remacs='emacs -r'
 ##
 ## PDFs
 ##
+#alias borralatex='rm *.aux *.bbl *.blg *.log *.out .aux'
+alias borralatex="
+echo Borrando los ficheros de log...
+rm -f *.log
+echo Borrando los ficheros auxiliares...
+rm -f *.aux
+rm -f *.out
+rm -f *.exa
+echo Borrando los ficheros de generación de índices de palabras...
+rm -f *.idx
+rm -f *.ilg
+rm -f *.ind
+echo Borrando los ficheros de generación de tablas de contenidos...
+rm -f *.toc
+rm -f *.lof
+rm -f *.lot
+echo Borrando los ficheros de salida...
+rm -f *.dvi
+rm -f *.ps
+echo Borrando los ficheros intermedios de BibTeX...
+rm -f *.bbl
+rm -f *.blg
+"
 alias pdf3x2='for i in *.pdf; do pdfnup —nup 2x3 —no-landscape $i -o 3x2/$i; done'
 alias pdf2x2='if [ ! -d 2x2 ]; then mkdir 2x2; fi; for i in *.pdf; do pdfnup —nup 2x2 "$i" -o 2x2/"$i"; done'
 alias concatpdf='test -f ALL.pdf || pdftk * cat output ALL.pdf'
 alias reducepdf='gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile=lowQuality.pdf'
+alias pdfToGray='gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -sOutputFile=file_BW.pdf'
 
 
 ##
@@ -74,3 +107,8 @@ alias isotoutf8='iconv -t UTF-8 -f ISO-8859-15'
 
 
 
+
+# Alias definitions.
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi

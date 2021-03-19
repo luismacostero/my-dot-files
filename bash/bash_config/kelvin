@@ -1,9 +1,0 @@
-#Configuraciones propias de Kelvin
-
-export PATH=/home/lcostero/local/bin:$PATH
-
-alias ompss_instr='source $HOME/.bash_config/kelvin_ompss_instr'
-alias ompss_perf='source $HOME/.bash_config/kelvin_ompss_perf' 
-alias ompss_debig='source $HOME/.bash_config/kelvin_ompss_debug'
-
-alias reset_cores='for i in {0..3}; do sudo cpufreq-set -c $i -g userspace -d 3600MHz -u 3600MHz; done'
