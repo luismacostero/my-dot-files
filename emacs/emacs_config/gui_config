@@ -1,7 +1,14 @@
 ;;
 ;; Temas de colores y  modificaciones necesarias
 ;;
+
 (load-theme 'misterioso)
+;; (setq default-frame-alist
+;;       (append
+;;        '((background-color     ."#2E3436")
+;; 	 (foreground-color     ."white")
+;; 	 ) default-frame-alist))
+;;(load-theme 'solarized-dark t)
 
 (set-face-background 'linum "#2D3743")
 (set-face-foreground 'linum "#999999")
@@ -30,7 +37,9 @@
 ;;
 ;; Funtes y tamaños
 ;;
+;(set-default-font "Inconsolata 12")
 (set-default-font "DejaVu Sans Mono Book 9")
+
 
 ;;
 ;; fci (fill column indicator) => linea vertical dcha

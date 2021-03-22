@@ -34,14 +34,21 @@
 ;; Usa y/n en lugar de yes/no 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; No muestres passwords en el minibuffer
+(add-hook 'comint-mode-hook
+          (lambda ()
+            (add-to-list 'comint-output-filter-functions
+                         'comint-watch-for-password-prompt)))
+
 ;; Mis temas de colores están en
-(setq emacs-config-my-colorthemes-directory (concat emacs-config-dir "color-themes/"))
+(setq emacs-config-my-colorthemes-directory (concat emacs-config-dir "/color-themes/"))
 (add-to-list 'custom-theme-load-path emacs-config-my-colorthemes-directory)
 
 ;; Mis ficheros de los distintos modos están en
 (setq my-lisp-modes-directory (concat emacs-config-dir "/emacs-lisp/"))
 ;; Carga el directorio de los ficheros elisp
 (add-to-list 'load-path my-lisp-modes-directory)
+(add-to-list 'load-path emacs-config-my-colorthemes-directory)
 
 ;; No crees ficheros temporales xxx~
 (setq make-backup-files nil)
@@ -106,3 +113,17 @@
    (setq
     mode-line-buffer-identification
     my-mode-line-buffer-identification)))
+
+
+
+;;
+;; C-tab para desplazarse entre buffers de forma circular.
+;;  Llama a una función del fichero functions
+(global-set-key [\C-tab]                  'yic-next-buffer)
+(global-set-key [\C-S-iso-lefttab]     'yic-prev-buffer)
+
+
+;;
+;; C-c C-g goto-line
+;;
+(global-set-key (kbd "C-c C-g") 'goto-line)

@@ -4,13 +4,24 @@
 ;;  activas o no)
 ;;==============================================================================
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;; Una mezcla de vari/os sitios, principalmente:
+;;
+;;    Mio propio
+;;    http://www.emacswiki.org/emacs/VictorPeinado
+;;    http://dahoiv.net/.emacs
+;;    http://snarfed.org 
+;;    http://emacs-fu.blogspot.com.es/2009/01/counting-words.html (cuenta num palabras)
+;;    https://zzamboni.org/post/beautifying-org-mode-in-emacs/ (org-mode bonito)
+;;    Otros muchos sitios que se intentan referenciar en el código 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 ;;
 ;; General config variables
 ;;
 
 ;; Directorio con los ficheros de configuración
-(setq emacs-config-dir (expand-file-name "~/data/tmp/emacs/"))
+(setq emacs-config-dir (expand-file-name "~/emacs_config/"))
 
 
 ;;
@@ -19,10 +30,13 @@
 
 ;; General
 (load-file (concat emacs-config-dir  "/general"))
-;; Configuraciones para la shell
-(load-file (concat emacs-config-dir  "/shell"))
+;; Functions
+(load-file (concat emacs-config-dir  "/functions"))
 ;; Configuraciones de los distintos modos válidos para todas las situaciones
 (load-file (concat emacs-config-dir  "/modes_config"))
+
+;; Configuraciones para la shell
+(load-file (concat emacs-config-dir  "/shell"))
 
 
 ;; Segun si estamos en terminal o gui, cargamos el fichero correspondiente

@@ -1,0 +1,310 @@
+;; =============
+;; Lista de paquetes. Si no está, lo instala
+;; =============
+(ensure-package-installed
+ 'neotree
+ 'hideshow
+ 'sgml-mode
+;; 'nxml-mode
+ 'org-bullets
+ 'magit
+ ;; etc, ...
+)
+
+
+
+
+
+;; =============
+;; Octave
+;; =============
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
+
+
+;; =============
+;; OpenCL
+;; =============
+;;(require 'opencl-mode)
+(when (require 'opencl-mode nil 'noerror)
+  (add-to-list 'auto-mode-alist '("\\.cl\\'" . opencl-mode))
+  (add-to-list 'auto-mode-alist '("\\.cuh\\'" . opencl-mode))
+  )
+
+
+;; =============
+;; Neo-tree
+;; =============
+(when (require 'neotree nil 'noerror)
+  (add-to-list 'load-path (concat my-lisp-modes-directory "neotree"))
+  (require 'neotree)
+  ;; F9 para abrir el arbol de directorios
+  (global-set-key [f9] 'neotree-toggle)
+  ;; Cuando se abre el arbol, se situa directamente en el directorio actual
+  (setq neo-smart-open t)
+  )
+
+
+;; =============
+;; ido-mode
+;; =============
+(require 'ido)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode t)
+
+
+;; =============
+;; Irony-mode
+;; https://github.com/martin-tornqvist/env/blob/master/how-to-setup-irony-mode.txt
+;; =============
+
+;; irony-mode 
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+
+;; company mode
+(add-hook 'c++-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'company-mode)
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+;; (optional) adds CC special commands to `company-begin-commands' in order to
+;; trigger completion at interesting places, such as after scope operator
+;;     std::|
+(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+
+;; flycheck-mode
+(add-hook 'c++-mode-hook 'flycheck-mode)
+(add-hook 'c-mode-hook 'flycheck-mode)
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+;; eldoc-mode
+(add-hook 'irony-mode-hook 'irony-eldoc)
+
+;; (optional) bind TAB for indent-or-complete
+(defun irony--check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
+        (backward-char 1)
+        (if (looking-at "->") t nil)))))
+(defun irony--indent-or-complete ()
+  "Indent or Complete"
+  (interactive)
+  (cond ((and (not (use-region-p))
+              (irony--check-expansion))
+         (message "complete")
+         (company-complete-common))
+        (t
+         (message "indent")
+         (call-interactively 'c-indent-line-or-region))))
+(defun irony-mode-keys ()
+  "Modify keymaps used by `irony-mode'."
+  (local-set-key (kbd "TAB") 'irony--indent-or-complete)
+  (local-set-key [tab] 'irony--indent-or-complete))
+(add-hook 'c-mode-common-hook 'irony-mode-keys)
+;; Add include folders
+(setq irony-additional-clang-options '("-std=c++11"
+				       "-Wall"
+				       "-Wextra"
+				       "-lm"
+				       "-DDEBUG"))
+
+
+;; =============
+;;  CC mode
+;; =============
+(setq tab-width 2)
+(setq c-default-style "linux" 
+      c-basic-offset 2)
+
+(add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
+(defun my-indent-setup ()
+  (c-set-offset 'arglist-intro '+))
+(add-hook 'java-mode-hook 'my-indent-setup)
+
+
+
+;; =============
+;; LaTeX -- AucTeX, RefTeX
+;; =============
+
+(setq TeX-PDF-mode t)
+(setq latex-run-command "pdflatex")
+(setq-default TeX-PDF-mode t)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex) ; Activamos reftec + auctex
+(setq reftex-plug-into-AUCTeX t) ; Conectar auctex con reftex
+(setq TeX-default-mode 'LaTeX-mode) ;forzamos que tex sea LaTeX
+(setq TeX-force-default-mode t)
+(setq TeX-parse-self t) ;recorre el fichero para buscar comandos etc
+(setq TeX-auto-save t) ; guardado de simbolos, comandos, etc
+(setq-default TeX-master nil) ; Query for the master file
+(load "preview-latex.el" nil t t) ; preview-latex
+(add-hook 'LaTeX-mode-hook 'flyspell-mode) ; Syntax check with latex
+
+;; Use evince to open de pdf
+(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
+(setq TeX-view-program-selection '((output-pdf "Evince")))
+
+;; Sync tex with pdf page
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+(setq TeX-source-correlate-start-server t)
+
+
+;; ==============
+;; dired-mode
+;; =============
+
+;; Cuando usamos dired, cargamos las funcionalidades extra de dired-x
+(add-hook 'dired-load-hook (function (lambda () (load "dired-x"))))
+;; Activamod la tecla 'a' en dired sin que pregunte más
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; ==============
+;; XML - mode
+;; =============
+
+;;C-c h (o shift-Mouse2 para contraer xml regions)
+(require 'hideshow)
+(require 'sgml-mode)
+(require 'nxml-mode)
+(add-to-list 'hs-special-modes-alist
+             '(nxml-mode
+               "<!--\\|<[^/>]*[^/]>"
+               "-->\\|</[^/>]*[^/]>"
+
+               "<!--"
+               sgml-skip-tag-forward
+               nil))
+(add-hook 'nxml-mode-hook 'hs-minor-mode)
+;; optional key bindings, easier than hs defaults
+;; Por defecto, tmb funciona shift+Mouse-2 (rueda raton).
+(define-key nxml-mode-map (kbd "C-c h") 'hs-toggle-hiding)
+
+
+
+;; ==============
+;; tramp-mode
+;; =============
+
+
+;; Si estamos editando un fichero remoto, mostramos el hostname en la barra inferior
+(defconst my-mode-line-buffer-identification
+  (list
+   '(:eval
+     (let ((host-name
+            (if (file-remote-p default-directory)
+                (tramp-file-name-host
+                 (tramp-dissect-file-name default-directory))
+              (system-name))))
+       (if (string-match "^[^0-9][^.]*\\(\\..*\\)" host-name)
+           (substring host-name 0 (match-beginning 1))
+         host-name)))
+   ": %12b"))
+
+(setq-default
+ mode-line-buffer-identification
+ my-mode-line-buffer-identification)
+
+(add-hook
+ 'dired-mode-hook
+ (lambda ()
+   (setq
+    mode-line-buffer-identification
+    my-mode-line-buffer-identification)))
+
+
+
+;; ==================
+;;  === ORG-mode ===
+;; Principalmente copiado de aqui: https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+;; ==================
+
+;; Desactivar caracteres en el texto enriquecido (* / _ + = ...)
+(setq org-hide-emphasis-markers t)
+
+;; Fuentes proporcionales a cada tipo con distintos tamanyos para los encabezados.
+;; OJO, quizás requiera instalar fuentes externas en el sistema (Como ET Book)
+;; OJO2, en los titulos nos e notan las negrias o cursivas porque ya lo está
+(let* ((variable-tuple
+	(cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+	      ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+	      ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+	      ((x-list-fonts "Verdana")         '(:font "Verdana"))
+	      ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+	      (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+       (base-font-color     (face-foreground 'default nil 'default))
+       (headline           `(:inherit default :weight bold )))
+  ;;(headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+  (custom-theme-set-faces
+   'user
+   `(org-level-8 ((t (,@headline ,@variable-tuple))))
+   `(org-level-7 ((t (,@headline ,@variable-tuple))))
+   `(org-level-6 ((t (,@headline ,@variable-tuple))))
+   `(org-level-5 ((t (,@headline ,@variable-tuple))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
+   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+
+;; Faces 
+(custom-theme-set-faces
+ 'user
+ '(variable-pitch ((t (:weight light :height 120 :family "ETBembo"))))
+ '(fixed-pitch ((t (:height 120 :family "Inconsolata")))))
+
+;; Activamos el variable-pitch en org-mode
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+(custom-theme-set-faces
+   'user
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "royal blue" :underline t))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+
+
+;; Loc bloques de codigo se muestran con colorines
+(setq org-src-fontify-natively t)
+
+;; Sustituimos los bullets que se muestran cuando las listas
+(font-lock-add-keywords 'org-mode
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+;; Cambiamos los *** de cada encabezado por bonitos iconos utf8
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(add-hook 'org-mode-hook 'turn-off-auto-fill)
+(add-hook 'org-mode-hook 'visual-line-mode)
+
+
+;; Usamos minted para exportar los bloques de código (más bonito que listings)
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+	"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
