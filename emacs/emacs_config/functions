@@ -13,10 +13,28 @@
   (mapcar
    (lambda (package)
      (unless (package-installed-p package)
-       (package-install package)))
+       (message "aaaa")
+       (refresh-packages-once)
+       (message "bbbbb")
+       (package-install package)
+       (message "ccccc")
+       ))
      packages)
 )
 
+;; propia
+(defun refresh-packages-once ()
+  "Actualiza la lista de paquetes una sola vez!!!!"
+  (if (not (boundp 'already-packages-refreshed))
+      (progn
+       (message "KKKK")
+       (package-refresh-contents)
+       (message "LLLL")
+       (setq already-packages-refreshed t)
+       (message "MMMM")
+       )
+    )
+  )
 
 
 ;;
