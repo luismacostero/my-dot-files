@@ -20,19 +20,14 @@ then
     cp ${base}/emacs $HOME/.emacs
     cp -r ${base}/emacs_config $HOME
 
-#chapuza de permisos. Hacer mejor la proixma vez
-#    chmod 644 $HOME/.emacs
-
-#    chmod +x $HOME/emacs_config/
-#    chmod 644 $HOME/emacs_config/*
-
-#    chmod +x $HOME/emacs_config/*/
-#    chmod 644 $HOME/emacs_config/*/*
-
-#    chmod +x $HOME/emacs_config/*/*/
-#    chmod 644 $HOME/emacs_config/*/*/*
+    #setting proper permisons
+    chmod 644 $HOME/.emacs
+    chmod -R u+rwX,go+rX,go-w $HOME/emacs_config
 
     echo "Done :)"
+    echo "......"
+    echo "La primera ejecución de emacs puede tardar unos segundos en instalar todos los paquetes"
+    
 fi
 
 

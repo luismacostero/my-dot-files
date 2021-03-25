@@ -35,6 +35,13 @@
 ;; Usa y/n en lugar de yes/no 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; En *scratch no aparece ningún texto por defecto
+(setq initial-scratch-message nil)
+
+;; El buffer por defecto (scratch) empieza en modo texto
+(setq initial-major-mode 'text-mode)
+
+
 ;; No muestres passwords en el minibuffer
 (add-hook 'comint-mode-hook
           (lambda ()
@@ -128,3 +135,14 @@
 ;; C-c C-g goto-line
 ;;
 (global-set-key (kbd "C-c C-g") 'goto-line)
+
+;;
+;; C-a mueve al inicio de la línea, pero saltando tabs
+;;
+(global-set-key (kbd "C-a") 'beginning-of-line-dwim)
+
+
+;;
+;; Dired-ḿode muestra iconos
+;;
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)

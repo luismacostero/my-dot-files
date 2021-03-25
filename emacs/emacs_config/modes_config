@@ -1,6 +1,16 @@
 ;; =============
 ;; Lista de paquetes. Si no está, lo instala
 ;; =============
+
+;; Instalamos primero los iconos
+(ensure-package-installed
+ 'all-the-icons)
+
+(if (boundp 'already-packages-refreshed)
+    (call-interactively 'all-the-icons-install-fonts)
+  )
+
+;; Resto de paquetes
 (ensure-package-installed
  'neotree
  'hideshow
@@ -9,11 +19,12 @@
  'org-bullets
  'magit
  'fill-column-indicator
+ 'all-the-icons-dired
  ;; etc, ...
 )
 
 
-
+(require 'all-the-icons)
 
 
 ;; =============

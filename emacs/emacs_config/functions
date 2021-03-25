@@ -13,11 +13,8 @@
   (mapcar
    (lambda (package)
      (unless (package-installed-p package)
-       (message "aaaa")
        (refresh-packages-once)
-       (message "bbbbb")
        (package-install package)
-       (message "ccccc")
        ))
      packages)
 )
@@ -27,11 +24,8 @@
   "Actualiza la lista de paquetes una sola vez!!!!"
   (if (not (boundp 'already-packages-refreshed))
       (progn
-       (message "KKKK")
        (package-refresh-contents)
-       (message "LLLL")
        (setq already-packages-refreshed t)
-       (message "MMMM")
        )
     )
   )
@@ -48,14 +42,19 @@
     (message "Word count: %s" (how-many "\\w+" b e))))
 
 
+
+;;
+;; Mueve al cursor al comienzo de la linea, pero tiene en cuenta tabuladores y espacios al inicio
+(defun beginning-of-line-dwim ()
+  (interactive)
+  "Move to beginning of indentation, if there move to beginning of line."
+  (if (= (point) (progn (back-to-indentation) (point)))
+      (beginning-of-line)))
+
+
+
+
 ;; --------------------------------------------------
-;; C-tab para desplazar entre buffers
-;; --------------------------------------------------
-
-
-
-
-;; 
 ;; C-tab para desplazar entre buffers
 ;; --------------------------------------------------
 ;;   Original yic-buffer.el
