@@ -6,6 +6,7 @@
 (ensure-package-installed
  'all-the-icons)
 
+;; Si es la primera vez, instalamos las fuentes
 (if (boundp 'already-packages-refreshed)
     (call-interactively 'all-the-icons-install-fonts)
   )
@@ -20,10 +21,20 @@
  'magit
  'fill-column-indicator
  'all-the-icons-dired
+ 'use-package
  ;; etc, ...
+ )
+
+(ensure-package-installed
+ 'irony
+ 'irony-eldoc
+ 'flycheck-irony
+ 'company'irony
 )
 
-
+;; =============
+;; All-the-icons
+;; =============
 (require 'all-the-icons)
 
 
@@ -70,7 +81,16 @@
 ;; https://github.com/martin-tornqvist/env/blob/master/how-to-setup-irony-mode.txt
 ;; =============
 
-;; irony-mode 
+;; irony-mode
+(if (boundp 'already-packages-refreshed)
+    (call-interactively 'irony-install-server)
+  )
+
+
+(require 'irony)
+
+
+
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 
@@ -94,14 +114,31 @@
 ;;     std::|
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
 
-;; flycheck-mode
-(add-hook 'c++-mode-hook 'flycheck-mode)
-(add-hook 'c-mode-hook 'flycheck-mode)
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+;; company-mode
+(use-package company
+  :ensure t
+  :defer t
+  :init (add-hook 'after-init-hook 'global-company-mode)
+  :config
+  (use-package company-irony :ensure t :defer t)
+  (setq company-idle-delay              nil
+	company-minimum-prefix-length   2
+	company-show-numbers            t
+	company-tooltip-limit           20
+	company-dabbrev-downcase        nil
+	company-backends                '((company-irony company-gtags))
+	)
+  :bind ("C-;" . company-complete-common)
+  )
 
-;; eldoc-mode
-(add-hook 'irony-mode-hook 'irony-eldoc)
+;; ;; flycheck-mode
+;; (add-hook 'c++-mode-hook 'flycheck-mode)
+;; (add-hook 'c-mode-hook 'flycheck-mode)
+;; (eval-after-load 'flycheck
+;;   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+;; ;; eldoc-mode
+;; (add-hook 'irony-mode-hook 'irony-eldoc)
 
 ;; (optional) bind TAB for indent-or-complete
 (defun irony--check-expansion ()

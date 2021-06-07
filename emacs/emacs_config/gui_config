@@ -37,8 +37,8 @@
 ;;
 ;; Funtes y tamaños
 ;;
-;(set-default-font "Inconsolata 12")
-(set-default-font "DejaVu Sans Mono Book 9")
+;(set-frame-font "Inconsolata 12")
+(set-frame-font "DejaVu Sans Mono Book 9")
 
 
 ;;
